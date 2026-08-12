@@ -1,0 +1,115 @@
+spring:
+  application:
+    name: openplatform
+  profiles:
+    active: dev
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  threads:
+    virtual:
+      enabled: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/openplatform?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true&createDatabaseIfNotExist=true
+    username: root
+    password: 123456
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      database: 0
+
+server:
+  port: 8000
+
+sa-token:
+  token-name: Authorization
+  timeout: 86400
+  active-timeout: 1800
+  is-concurrent: true
+  is-share: false
+  token-style: tik
+  is-log: true
+  jwt-secret-key: openplatform-jwt-secret-key-2024
+
+continew-starter:
+  web:
+    response:
+      enabled: true
+      custom-success-code: 0
+      custom-error-code: 1
+  auth:
+    satoken:
+      enabled: false
+      security:
+        excludes:
+          - /auth/login
+          - /captcha/**
+          - /open-api/**
+          - /doc.html
+          - /webjars/**
+          - /v3/api-docs/**
+          - /swagger-resources/**
+          - /swagger-ui/**
+  log:
+    interceptor:
+      enabled: false
+  trace:
+    enabled: false
+  encrypt:
+    password-encoder:
+      enabled: true
+    field:
+      enabled: false
+  captcha:
+    graphic:
+      expirationInMinutes: 5
+    behavior:
+      enabled: false
+  cache:
+    jetcache:
+      enabled: false
+  ratelimiter:
+    enabled: false
+  data:
+    mybatis-plus:
+      enabled: true
+  extension:
+    crud:
+      mybatis-plus:
+        enabled: true
+    datapermission:
+      mybatis-plus:
+        enabled: true
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 0
+      logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+  group-configs:
+    - group: default
+      display-name: 全部接口
+      paths-to-match: /**
+    - group: open-platform
+      display-name: 开放平台
+      paths-to-match: /open-platform/**, /open-api/**
+
+logging:
+  level:
+    com.openplatform: debug
+    top.continew: info

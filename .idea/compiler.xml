@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="openplatform-common" />
+        <module name="openplatform-module-open" />
+        <module name="openplatform-module-admin" />
+        <module name="openplatform-server" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="openplatform" options="-parameters" />
+      <module name="openplatform-common" options="-parameters" />
+      <module name="openplatform-module-admin" options="-parameters" />
+      <module name="openplatform-module-open" options="-parameters" />
+      <module name="openplatform-server" options="-parameters" />
+    </option>
+  </component>
+</project>

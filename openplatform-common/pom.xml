@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.openplatform</groupId>
+        <artifactId>openplatform</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>openplatform-common</artifactId>
+    <packaging>jar</packaging>
+
+    <name>${project.artifactId}</name>
+    <description>公共模块</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>top.continew.starter</groupId>
+            <artifactId>continew-starter-json-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.continew.starter</groupId>
+            <artifactId>continew-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.continew.starter</groupId>
+            <artifactId>continew-starter-cache-jetcache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.continew.starter</groupId>
+            <artifactId>continew-starter-auth-satoken</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-sign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.continew.starter</groupId>
+            <artifactId>continew-starter-encrypt-field</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.continew.starter</groupId>
+            <artifactId>continew-starter-encrypt-password-encoder</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.continew.starter</groupId>
+            <artifactId>continew-starter-ratelimiter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.continew.starter</groupId>
+            <artifactId>continew-starter-captcha-behavior</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.continew.starter</groupId>
+            <artifactId>continew-starter-log-interceptor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.continew.starter</groupId>
+            <artifactId>continew-starter-extension-crud-mp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.continew.starter</groupId>
+            <artifactId>continew-starter-extension-datapermission-mp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.crane4j</groupId>
+            <artifactId>crane4j-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>me.ahoo.cosid</groupId>
+            <artifactId>cosid-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>me.ahoo.cosid</groupId>
+            <artifactId>cosid-spring-redis</artifactId>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,70 @@
+{
+  "groups": [
+    {
+      "name": "captcha",
+      "type": "com.openplatform.common.config.CaptchaProperties",
+      "sourceType": "com.openplatform.common.config.CaptchaProperties"
+    },
+    {
+      "name": "captcha.mail",
+      "type": "com.openplatform.common.config.CaptchaProperties$CaptchaMail",
+      "sourceType": "com.openplatform.common.config.CaptchaProperties"
+    },
+    {
+      "name": "captcha.sms",
+      "type": "com.openplatform.common.config.CaptchaProperties$CaptchaSms",
+      "sourceType": "com.openplatform.common.config.CaptchaProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "captcha.expiration-in-minutes",
+      "type": "java.lang.Long",
+      "description": "图形验证码过期时间",
+      "sourceType": "com.openplatform.common.config.CaptchaProperties"
+    },
+    {
+      "name": "captcha.mail.expiration-in-minutes",
+      "type": "java.lang.Long",
+      "description": "过期时间",
+      "sourceType": "com.openplatform.common.config.CaptchaProperties$CaptchaMail"
+    },
+    {
+      "name": "captcha.mail.length",
+      "type": "java.lang.Integer",
+      "description": "内容长度",
+      "sourceType": "com.openplatform.common.config.CaptchaProperties$CaptchaMail"
+    },
+    {
+      "name": "captcha.mail.template-path",
+      "type": "java.lang.String",
+      "description": "模板路径",
+      "sourceType": "com.openplatform.common.config.CaptchaProperties$CaptchaMail"
+    },
+    {
+      "name": "captcha.sms.code-key",
+      "type": "java.lang.String",
+      "description": "验证码字段模板键名",
+      "sourceType": "com.openplatform.common.config.CaptchaProperties$CaptchaSms"
+    },
+    {
+      "name": "captcha.sms.expiration-in-minutes",
+      "type": "java.lang.Long",
+      "description": "过期时间",
+      "sourceType": "com.openplatform.common.config.CaptchaProperties$CaptchaSms"
+    },
+    {
+      "name": "captcha.sms.length",
+      "type": "java.lang.Integer",
+      "description": "内容长度",
+      "sourceType": "com.openplatform.common.config.CaptchaProperties$CaptchaSms"
+    },
+    {
+      "name": "captcha.sms.time-key",
+      "type": "java.lang.String",
+      "description": "失效时间字段模板键名",
+      "sourceType": "com.openplatform.common.config.CaptchaProperties$CaptchaSms"
+    }
+  ],
+  "hints": []
+}
