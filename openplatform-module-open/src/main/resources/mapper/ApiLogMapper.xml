@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.openplatform.open.mapper.ApiLogMapper">
+    <select id="statByApi" resultType="java.util.LinkedHashMap">
+        SELECT api_id AS apiId,
+               COUNT(*) AS total,
+               SUM(CASE WHEN status_code = 200 THEN 1 ELSE 0 END) AS success,
+               SUM(CASE WHEN status_code != 200 THEN 1 ELSE 0 END) AS fail,
+               ROUND(IFNULL(AVG(cost_time), 0), 0) AS avgCostTime
+        FROM open_api_log
+        WHERE deleted = 0
+        GROUP BY api_id
+    </select>
+
+    <select id="statByApp" resultType="java.util.LinkedHashMap">
+        SELECT app_id AS appId,
+               COUNT(*) AS total,
+               SUM(CASE WHEN status_code = 200 THEN 1 ELSE 0 END) AS success,
+               SUM(CASE WHEN status_code != 200 THEN 1 ELSE 0 END) AS fail,
+               ROUND(IFNULL(AVG(cost_time), 0), 0) AS avgCostTime
+        FROM open_api_log
+        WHERE deleted = 0
+        GROUP BY app_id
+    </select>
+
+    <select id="statTrend" resultType="java.util.LinkedHashMap">
+        SELECT DATE(create_time) AS date,
+               COUNT(*) AS total,
+               SUM(CASE WHEN status_code = 200 THEN 1 ELSE 0 END) AS success,
+               SUM(CASE WHEN status_code != 200 THEN 1 ELSE 0 END) AS fail
+        FROM open_api_log
+        WHERE deleted = 0
+        <if test="startDate != null and startDate != ''">
+            AND create_time >= CONCAT(#{startDate}, ' 00:00:00')
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND create_time &lt;= CONCAT(#{endDate}, ' 23:59:59')
+        </if>
+        GROUP BY DATE(create_time)
+        ORDER BY DATE(create_time)
+    </select>
+</mapper>
