@@ -1,0 +1,33 @@
+### Java ###
+target/
+*.class
+*.jar
+*.war
+*.log
+*.tmp
+*.swp
+*~
+
+### Maven ###
+.flattened-pom.xml
+
+### IDE ###
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+
+### Node ###
+node_modules/
+dist/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Project ###
+startup.log
+META-INF/
