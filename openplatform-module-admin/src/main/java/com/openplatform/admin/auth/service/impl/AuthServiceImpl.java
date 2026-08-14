@@ -23,12 +23,16 @@ import com.openplatform.common.enums.DisEnableStatusEnum;
 import com.openplatform.common.util.SecureUtils;
 import com.openplatform.common.constant.GlobalConstants;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     private final UserService userService;
     private final RoleService roleService;
@@ -51,7 +55,11 @@ public class AuthServiceImpl implements AuthService {
         if (DisEnableStatusEnum.DISABLE.equals(user.getStatus())) {
             throw new RuntimeException("用户已被禁用");
         }
-        String decryptedPassword = SecureUtils.decryptPasswordByRsaPrivateKey(req.getPassword(), "密码解密失败");
+        String rawPassword = req.getPassword();
+        log.info("Login password received, length={}, startsWith={}",
+            rawPassword != null ? rawPassword.length() : 0,
+            rawPassword != null && rawPassword.length() > 20 ? rawPassword.substring(0, 20) + "..." : rawPassword);
+        String decryptedPassword = SecureUtils.decryptPasswordByRsaPrivateKey(rawPassword, "密码解密失败");
         if (!passwordEncoder.matches(decryptedPassword, user.getPassword())) {
             throw new RuntimeException("用户名或密码错误");
         }

@@ -16,7 +16,11 @@
 
 package com.openplatform.common.config;
 
-import cn.hutool.extra.spring.SpringUtil;
+import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 /**
  * RSA 配置属性
@@ -25,19 +29,34 @@ import cn.hutool.extra.spring.SpringUtil;
  * @author Charles7c
  * @since 2022/12/21 20:21
  */
+@Component
 public class RsaProperties {
 
-    /**
-     * 私钥
-     */
-    public static final String PRIVATE_KEY;
-    public static final String PUBLIC_KEY;
+    private static final Logger log = LoggerFactory.getLogger(RsaProperties.class);
 
-    static {
-        PRIVATE_KEY = SpringUtil.getProperty("continew-starter.encrypt.field.private-key");
-        PUBLIC_KEY = SpringUtil.getProperty("continew-starter.encrypt.field.public-key");
+    private static String privateKey;
+    private static String publicKey;
+
+    private final Environment environment;
+
+    public RsaProperties(Environment environment) {
+        this.environment = environment;
     }
 
-    private RsaProperties() {
+    @PostConstruct
+    public void init() {
+        privateKey = environment.getProperty("continew-starter.encrypt.field.private-key");
+        publicKey = environment.getProperty("continew-starter.encrypt.field.public-key");
+        log.info("RSA keys initialized, privateKey={}, publicKey={}",
+            privateKey != null ? "present(" + privateKey.length() + ")" : "null",
+            publicKey != null ? "present(" + publicKey.length() + ")" : "null");
+    }
+
+    public static String getPrivateKey() {
+        return privateKey;
+    }
+
+    public static String getPublicKey() {
+        return publicKey;
     }
 }

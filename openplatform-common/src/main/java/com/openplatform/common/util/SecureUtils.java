@@ -22,8 +22,14 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import com.openplatform.common.config.RsaProperties;
 import com.openplatform.common.constant.RegexConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
+import javax.crypto.Cipher;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
 
 /**
  * 加密/解密工具类
@@ -32,6 +38,8 @@ import top.continew.starter.core.util.validation.ValidationUtils;
  * @since 2022/12/21 21:41
  */
 public class SecureUtils {
+
+    private static final Logger log = LoggerFactory.getLogger(SecureUtils.class);
 
     private SecureUtils() {
     }
@@ -43,7 +51,7 @@ public class SecureUtils {
      * @return 加密后的内容
      */
     public static String encryptByRsaPublicKey(String data) {
-        String publicKey = RsaProperties.PUBLIC_KEY;
+        String publicKey = RsaProperties.getPublicKey();
         ValidationUtils.throwIfBlank(publicKey, "请配置 RSA 公钥");
         return encryptByRsaPublicKey(data, publicKey);
     }
@@ -55,7 +63,7 @@ public class SecureUtils {
      * @return 解密后的内容
      */
     public static String decryptByRsaPrivateKey(String data) {
-        String privateKey = RsaProperties.PRIVATE_KEY;
+        String privateKey = RsaProperties.getPrivateKey();
         ValidationUtils.throwIfBlank(privateKey, "请配置 RSA 私钥");
         return decryptByRsaPrivateKey(data, privateKey);
     }
@@ -79,7 +87,22 @@ public class SecureUtils {
      * @return 解密后的内容
      */
     public static String decryptByRsaPrivateKey(String data, String privateKey) {
-        return new String(SecureUtil.rsa(privateKey, null).decrypt(Base64.decode(data), KeyType.PrivateKey));
+        try {
+            // 使用 Java 标准 KeyFactory + Cipher 解密，避免 Hutool 解析 PKCS#8 的问题
+            byte[] privateKeyBytes = Base64.decode(privateKey
+                .replace("-----BEGIN PRIVATE KEY-----", "")
+                .replace("-----END PRIVATE KEY-----", "")
+                .replaceAll("\\s", ""));
+            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(privateKeyBytes);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            PrivateKey key = keyFactory.generatePrivate(spec);
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            return new String(cipher.doFinal(Base64.decode(data)));
+        } catch (Exception e) {
+            log.error("RSA decrypt failed via Java API: {}", e.getMessage(), e);
+            throw new RuntimeException("RSA decrypt failed", e);
+        }
     }
 
     /**
@@ -104,7 +127,15 @@ public class SecureUtils {
     public static String decryptPasswordByRsaPrivateKey(String encryptedPasswordByRsaPublicKey,
                                                         String errorMsg,
                                                         boolean isVerifyPattern) {
-        String rawPassword = ExceptionUtils.exToNull(() -> decryptByRsaPrivateKey(encryptedPasswordByRsaPublicKey));
+        String rawPassword;
+        try {
+            rawPassword = decryptByRsaPrivateKey(encryptedPasswordByRsaPublicKey);
+        } catch (Exception e) {
+            log.error("RSA decrypt failed, data length={}, error: {}", 
+                encryptedPasswordByRsaPublicKey != null ? encryptedPasswordByRsaPublicKey.length() : 0, 
+                e.getMessage(), e);
+            rawPassword = null;
+        }
         ValidationUtils.throwIfBlank(rawPassword, errorMsg);
         if (isVerifyPattern) {
             ValidationUtils.throwIf(!ReUtil
